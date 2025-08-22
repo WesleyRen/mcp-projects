@@ -60,114 +60,39 @@ if (requiredEnvVars.length === 0) {
   });
 }
 
-// Test if the MCP server packages can be accessed
+// Test if the MCP server packages are available (without running them)
 console.log('\n🔍 Testing MCP server packages availability...');
 
-// Test Brave Search server
-console.log('\n📡 Testing Brave Search server...');
-const testBraveServer = spawn('npx', ['-y', '@modelcontextprotocol/server-brave-search', '--help'], {
-  stdio: ['pipe', 'pipe', 'pipe']
-});
+// Check if MCP server packages are available by checking node_modules
+console.log('\n📁 Checking Filesystem server package...');
+if (fs.existsSync('node_modules/@modelcontextprotocol/server-filesystem')) {
+  console.log('✅ Filesystem MCP server package is available');
+} else {
+  console.log('⚠️  Filesystem MCP server package not found');
+  console.log('   Run: npm install @modelcontextprotocol/server-filesystem');
+}
 
-let braveOutput = '';
-let braveErrorOutput = '';
+console.log('\n🧠 Checking Sequential Thinking server package...');
+if (fs.existsSync('node_modules/@modelcontextprotocol/server-sequential-thinking')) {
+  console.log('✅ Sequential Thinking MCP server package is available');
+} else {
+  console.log('⚠️  Sequential Thinking MCP server package not found');
+  console.log('   Run: npm install @modelcontextprotocol/server-sequential-thinking');
+}
 
-testBraveServer.stdout.on('data', (data) => {
-  braveOutput += data.toString();
-});
+console.log('\n🤖 Checking Puppeteer server package...');
+if (fs.existsSync('node_modules/puppeteer-mcp-server')) {
+  console.log('✅ Puppeteer MCP server package is available');
+} else {
+  console.log('⚠️  Puppeteer MCP server package not found');
+  console.log('   Run: npm install puppeteer-mcp-server');
+}
 
-testBraveServer.stderr.on('data', (data) => {
-  braveErrorOutput += data.toString();
-});
-
-testBraveServer.on('close', (code) => {
-  if (code === 0 || braveOutput.includes('Usage') || braveOutput.includes('help')) {
-    console.log('✅ Brave Search MCP server package is accessible');
-  } else {
-    console.log('❌ Brave Search MCP server package test failed');
-    if (braveErrorOutput) {
-      console.log('Error output:', braveErrorOutput);
-    }
-  }
-  
-  // Test Weather server after Brave Search test completes
-  console.log('\n🌤️  Testing Weather server...');
-  const testWeatherServer = spawn('npx', ['-y', '@modelcontextprotocol/server-weather', '--help'], {
-    stdio: ['pipe', 'pipe', 'pipe']
-  });
-
-  let weatherOutput = '';
-  let weatherErrorOutput = '';
-
-  testWeatherServer.stdout.on('data', (data) => {
-    weatherOutput += data.toString();
-  });
-
-  testWeatherServer.stderr.on('data', (data) => {
-    weatherErrorOutput += data.toString();
-  });
-
-  testWeatherServer.on('close', (code) => {
-    if (code === 0 || weatherOutput.includes('Usage') || weatherOutput.includes('help')) {
-      console.log('✅ Weather MCP server package is accessible');
-    } else {
-      console.log('❌ Weather MCP server package test failed');
-      if (weatherErrorOutput) {
-        console.log('Error output:', weatherErrorOutput);
-      }
-    }
-    
-    // Test Filesystem server after Weather test completes
-    console.log('\n📁 Testing Filesystem server...');
-    const testFilesystemServer = spawn('npx', ['-y', '@modelcontextprotocol/server-filesystem', '--help'], {
-      stdio: ['pipe', 'pipe', 'pipe']
-    });
-
-    let filesystemOutput = '';
-    let filesystemErrorOutput = '';
-
-    testFilesystemServer.stdout.on('data', (data) => {
-      filesystemOutput += data.toString();
-    });
-
-    testFilesystemServer.stderr.on('data', (data) => {
-      filesystemErrorOutput += data.toString();
-    });
-
-    testFilesystemServer.on('close', (code) => {
-      if (code === 0 || filesystemOutput.includes('Usage') || filesystemOutput.includes('help')) {
-        console.log('✅ Filesystem MCP server package is accessible');
-      } else {
-        console.log('❌ Filesystem MCP server package test failed');
-        if (filesystemErrorOutput) {
-          console.log('Error output:', filesystemErrorOutput);
-        }
-      }
-      
-      console.log('\n🎉 Configuration test completed!');
-      console.log('\nNext steps:');
-      if (requiredEnvVars.length > 0) {
-        console.log('1. Set any missing environment variables shown above');
-      }
-      console.log(`${requiredEnvVars.length > 0 ? '2' : '1'}. Run: npm run start-brave (for Brave Search)`);
-      console.log(`${requiredEnvVars.length > 0 ? '3' : '2'}. Run: npm run start-weather (for Weather)`);
-      console.log(`${requiredEnvVars.length > 0 ? '4' : '3'}. Run: npm run start-filesystem (for Filesystem - no API key needed!)`);
-      console.log(`${requiredEnvVars.length > 0 ? '5' : '4'}. Connect your MCP client to the servers`);
-    });
-
-    testFilesystemServer.on('error', (error) => {
-      console.error('❌ Failed to test Filesystem MCP server:', error.message);
-      console.log('\n💡 Try running: npm install');
-    });
-  });
-
-  testWeatherServer.on('error', (error) => {
-    console.error('❌ Failed to test Weather MCP server:', error.message);
-    console.log('\n💡 Try running: npm install');
-  });
-});
-
-testBraveServer.on('error', (error) => {
-  console.error('❌ Failed to test Brave Search MCP server:', error.message);
-  console.log('\n💡 Try running: npm install');
-});
+console.log('\n🎉 Configuration test completed!');
+console.log('\nNext steps:');
+if (requiredEnvVars.length > 0) {
+  console.log('1. Set any missing environment variables shown above');
+}
+console.log(`${requiredEnvVars.length > 0 ? '2' : '1'}. Install packages: npm install`);
+console.log(`${requiredEnvVars.length > 0 ? '3' : '2'}. Start servers: npm run start-filesystem, start-sequential-thinking, start-puppeteer`);
+console.log(`${requiredEnvVars.length > 0 ? '4' : '3'}. Connect your MCP client to the servers`);

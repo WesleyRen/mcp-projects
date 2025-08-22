@@ -4,13 +4,13 @@
   "description": "MCP configuration for multiple servers including Brave Search, Weather, and Filesystem",
   "main": "mcp-config.json",
   "scripts": {
-    "install-brave": "npm install -g @modelcontextprotocol/server-brave-search",
-    "install-weather": "npm install -g @modelcontextprotocol/server-weather",
     "install-filesystem": "npm install -g @modelcontextprotocol/server-filesystem",
-    "install-all": "npm run install-brave && npm run install-weather && npm run install-filesystem",
-    "start-brave": "npx @modelcontextprotocol/server-brave-search",
-    "start-weather": "npx @modelcontextprotocol/server-weather",
+    "install-sequential-thinking": "npm install -g @modelcontextprotocol/server-sequential-thinking",
+    "install-puppeteer": "npm install -g puppeteer-mcp-server",
+    "install-all": "npm run install-filesystem && npm run install-sequential-thinking && npm run install-puppeteer",
     "start-filesystem": "npx @modelcontextprotocol/server-filesystem",
+    "start-sequential-thinking": "npx @modelcontextprotocol/server-sequential-thinking",
+    "start-puppeteer": "npx puppeteer-mcp-server",
     "test": "echo 'Test the MCP server connections'"
   },
   "keywords": [
@@ -26,9 +26,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/server-brave-search": "^0.1.0",
-    "@modelcontextprotocol/server-weather": "^0.1.0",
-    "@modelcontextprotocol/server-filesystem": "^0.1.0"
+    "@modelcontextprotocol/server-filesystem": "latest",
+    "@modelcontextprotocol/server-sequential-thinking": "latest",
+    "puppeteer-mcp-server": "latest"
   },
   "devDependencies": {},
   "engines": {
