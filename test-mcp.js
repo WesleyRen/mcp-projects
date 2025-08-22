@@ -23,22 +23,41 @@ if (!fs.existsSync('package.json')) {
 
 console.log('✅ Configuration files found');
 
-// Check if API keys are set
-const braveApiKey = process.env.BRAVE_API_KEY;
-const weatherApiKey = process.env.OPENWEATHER_API_KEY;
-
-if (!braveApiKey) {
-  console.log('⚠️  BRAVE_API_KEY environment variable not set');
-  console.log('   You can set it with: export BRAVE_API_KEY="your-key"');
-} else {
-  console.log('✅ BRAVE_API_KEY environment variable is set');
+// Check if API keys are set by reading the config file
+let config;
+try {
+  config = JSON.parse(fs.readFileSync('mcp-config.json', 'utf8'));
+} catch (error) {
+  console.error('❌ Failed to parse mcp-config.json:', error.message);
+  process.exit(1);
 }
 
-if (!weatherApiKey) {
-  console.log('⚠️  OPENWEATHER_API_KEY environment variable not set');
-  console.log('   You can set it with: export OPENWEATHER_API_KEY="your-key"');
+// Check for required environment variables based on config
+const requiredEnvVars = [];
+if (config.mcpServers['brave-search'] && config.mcpServers['brave-search'].env) {
+  Object.keys(config.mcpServers['brave-search'].env).forEach(key => {
+    requiredEnvVars.push(key);
+  });
+}
+if (config.mcpServers.weather && config.mcpServers.weather.env) {
+  Object.keys(config.mcpServers.weather.env).forEach(key => {
+    requiredEnvVars.push(key);
+  });
+}
+
+// Check which required environment variables are set
+if (requiredEnvVars.length === 0) {
+  console.log('✅ No API keys required - all servers use environment variables or no keys needed');
 } else {
-  console.log('✅ OPENWEATHER_API_KEY environment variable is set');
+  console.log('🔑 Checking required environment variables:');
+  requiredEnvVars.forEach(envVar => {
+    if (process.env[envVar]) {
+      console.log(`   ✅ ${envVar} is set`);
+    } else {
+      console.log(`   ⚠️  ${envVar} is not set`);
+      console.log(`      You can set it with: export ${envVar}="your-key"`);
+    }
+  });
 }
 
 // Test if the MCP server packages can be accessed
@@ -127,11 +146,13 @@ testBraveServer.on('close', (code) => {
       
       console.log('\n🎉 Configuration test completed!');
       console.log('\nNext steps:');
-      console.log('1. Set your BRAVE_API_KEY and OPENWEATHER_API_KEY environment variables');
-      console.log('2. Run: npm run start-brave (for Brave Search)');
-      console.log('3. Run: npm run start-weather (for Weather)');
-      console.log('4. Run: npm run start-filesystem (for Filesystem - no API key needed!)');
-      console.log('5. Connect your MCP client to the servers');
+      if (requiredEnvVars.length > 0) {
+        console.log('1. Set any missing environment variables shown above');
+      }
+      console.log(`${requiredEnvVars.length > 0 ? '2' : '1'}. Run: npm run start-brave (for Brave Search)`);
+      console.log(`${requiredEnvVars.length > 0 ? '3' : '2'}. Run: npm run start-weather (for Weather)`);
+      console.log(`${requiredEnvVars.length > 0 ? '4' : '3'}. Run: npm run start-filesystem (for Filesystem - no API key needed!)`);
+      console.log(`${requiredEnvVars.length > 0 ? '5' : '4'}. Connect your MCP client to the servers`);
     });
 
     testFilesystemServer.on('error', (error) => {
