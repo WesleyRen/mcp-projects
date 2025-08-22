@@ -7,12 +7,13 @@
 
 const { spawn } = require('child_process');
 
-console.log('🚀 Example MCP Client for Dual Server Configuration\n');
+console.log('🚀 Example MCP Client for Multi-Server Configuration\n');
 
 // Example of how to start the MCP servers
 console.log('To start the MCP servers, run:');
-console.log('  npm run start-brave    # Start Brave Search server');
-console.log('  npm run start-weather  # Start Weather server\n');
+console.log('  npm run start-brave      # Start Brave Search server');
+console.log('  npm run start-weather    # Start Weather server');
+console.log('  npm run start-filesystem # Start Filesystem server (no API key needed!)\n');
 
 // Example of how to connect from an MCP client
 console.log('Example MCP client connection:');
@@ -24,7 +25,7 @@ console.log('  name: "dual-mcp-client",');
 console.log('  version: "1.0.0"');
 console.log('});');
 console.log('');
-console.log('// Connect to both servers');
+console.log('// Connect to all servers');
 console.log('await client.connect();');
 console.log('');
 console.log('// Use the Brave Search tool');
@@ -36,6 +37,11 @@ console.log('');
 console.log('// Use the Weather tool');
 console.log('const weatherResult = await client.callTool("getCurrentWeather", {');
 console.log('  location: "New York, NY"');
+console.log('});');
+console.log('');
+console.log('// Use the Filesystem tool (no API key needed!)');
+console.log('const fileList = await client.callTool("listDirectory", {');
+console.log('  path: "./"');
 console.log('});');
 console.log('```\n');
 
@@ -75,3 +81,4 @@ console.log('');
 console.log('💡 Available tools:');
 console.log('   - Brave Search: web search, news search, image search');
 console.log('   - Weather: current conditions, forecasts, location search');
+console.log('   - Filesystem: file operations, directory listing, content reading/writing (demo - no API key!)');

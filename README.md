@@ -1,6 +1,6 @@
-# MCP Dual Server Configuration
+# MCP Multi-Server Configuration
 
-This project provides a configuration for using both the Brave Search and Weather MCP (Model Context Protocol) servers, giving AI assistants the ability to perform web searches and get weather information.
+This project provides a configuration for using multiple MCP (Model Context Protocol) servers including Brave Search, Weather, and Filesystem, giving AI assistants the ability to perform web searches, get weather information, and perform file operations.
 
 ## Prerequisites
 
@@ -47,7 +47,7 @@ This project provides a configuration for using both the Brave Search and Weathe
 
 ## Configuration
 
-The `mcp-config.json` file contains the MCP server configuration for both services:
+The `mcp-config.json` file contains the MCP server configuration for all services:
 
 ```json
 {
@@ -65,6 +65,10 @@ The `mcp-config.json` file contains the MCP server configuration for both servic
       "env": {
         "OPENWEATHER_API_KEY": "your-openweather-api-key-here"
       }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"]
     }
   }
 }
@@ -74,14 +78,16 @@ The `mcp-config.json` file contains the MCP server configuration for both servic
 
 ### Starting individual servers:
 ```bash
-npm run start-brave    # Start Brave Search server
-npm run start-weather  # Start Weather server
+npm run start-brave      # Start Brave Search server
+npm run start-weather    # Start Weather server
+npm run start-filesystem # Start Filesystem server
 ```
 
 ### Using with MCP clients:
-Both servers will be available to MCP clients that connect to them, providing:
+All servers will be available to MCP clients that connect to them, providing:
 - **Brave Search:** Web search capabilities through Brave's search engine
 - **Weather:** Current conditions and forecasts for any location
+- **Filesystem:** File and directory operations (read, write, list, etc.)
 
 ## Environment Variables
 
@@ -106,6 +112,15 @@ export OPENWEATHER_API_KEY="your-actual-openweather-api-key"
 - Temperature, humidity, wind speed, and more
 - Support for multiple units (metric/imperial)
 - Location search by city name or coordinates
+
+### Filesystem Server (Demo):
+- **No API key required** - Perfect for testing and demonstration
+- List files and directories
+- Read file contents
+- Write to files
+- Create and delete files/directories
+- File search and filtering
+- Safe sandboxed operations
 
 ## Security Best Practices
 
@@ -133,3 +148,4 @@ MIT License - see LICENSE file for details
 - [MCP Brave Search Server](https://github.com/modelcontextprotocol/server-brave-search)
 - [OpenWeather API Documentation](https://openweathermap.org/api)
 - [MCP Weather Server](https://github.com/modelcontextprotocol/server-weather)
+- [MCP Filesystem Server](https://github.com/modelcontextprotocol/server-filesystem)

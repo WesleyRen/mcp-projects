@@ -7,7 +7,7 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 
-console.log('🧪 Testing MCP Dual Server Configuration...\n');
+console.log('🧪 Testing MCP Multi-Server Configuration...\n');
 
 // Check if mcp-config.json exists
 if (!fs.existsSync('mcp-config.json')) {
@@ -98,12 +98,46 @@ testBraveServer.on('close', (code) => {
       }
     }
     
-    console.log('\n🎉 Configuration test completed!');
-    console.log('\nNext steps:');
-    console.log('1. Set your BRAVE_API_KEY and OPENWEATHER_API_KEY environment variables');
-    console.log('2. Run: npm run start-brave (for Brave Search)');
-    console.log('3. Run: npm run start-weather (for Weather)');
-    console.log('4. Connect your MCP client to the servers');
+    // Test Filesystem server after Weather test completes
+    console.log('\n📁 Testing Filesystem server...');
+    const testFilesystemServer = spawn('npx', ['-y', '@modelcontextprotocol/server-filesystem', '--help'], {
+      stdio: ['pipe', 'pipe', 'pipe']
+    });
+
+    let filesystemOutput = '';
+    let filesystemErrorOutput = '';
+
+    testFilesystemServer.stdout.on('data', (data) => {
+      filesystemOutput += data.toString();
+    });
+
+    testFilesystemServer.stderr.on('data', (data) => {
+      filesystemErrorOutput += data.toString();
+    });
+
+    testFilesystemServer.on('close', (code) => {
+      if (code === 0 || filesystemOutput.includes('Usage') || filesystemOutput.includes('help')) {
+        console.log('✅ Filesystem MCP server package is accessible');
+      } else {
+        console.log('❌ Filesystem MCP server package test failed');
+        if (filesystemErrorOutput) {
+          console.log('Error output:', filesystemErrorOutput);
+        }
+      }
+      
+      console.log('\n🎉 Configuration test completed!');
+      console.log('\nNext steps:');
+      console.log('1. Set your BRAVE_API_KEY and OPENWEATHER_API_KEY environment variables');
+      console.log('2. Run: npm run start-brave (for Brave Search)');
+      console.log('3. Run: npm run start-weather (for Weather)');
+      console.log('4. Run: npm run start-filesystem (for Filesystem - no API key needed!)');
+      console.log('5. Connect your MCP client to the servers');
+    });
+
+    testFilesystemServer.on('error', (error) => {
+      console.error('❌ Failed to test Filesystem MCP server:', error.message);
+      console.log('\n💡 Try running: npm install');
+    });
   });
 
   testWeatherServer.on('error', (error) => {

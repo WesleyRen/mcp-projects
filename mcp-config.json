@@ -7,6 +7,10 @@
     "weather": {
       "command": "npx",
       "args": ["-y", "@modelcontextprotocol/server-weather"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"]
     }
   }
 }
