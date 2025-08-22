@@ -1,0 +1,32 @@
+{
+  "name": "mcp-dual-server-config",
+  "version": "1.0.0",
+  "description": "MCP configuration for both Brave Search and Weather servers",
+  "main": "mcp-config.json",
+  "scripts": {
+    "install-brave": "npm install -g @modelcontextprotocol/server-brave-search",
+    "install-weather": "npm install -g @modelcontextprotocol/server-weather",
+    "install-all": "npm run install-brave && npm run install-weather",
+    "start-brave": "npx @modelcontextprotocol/server-brave-search",
+    "start-weather": "npx @modelcontextprotocol/server-weather",
+    "test": "echo 'Test the MCP server connections'"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "brave-search",
+    "search",
+    "weather",
+    "forecast"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/server-brave-search": "^0.1.0",
+    "@modelcontextprotocol/server-weather": "^0.1.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
